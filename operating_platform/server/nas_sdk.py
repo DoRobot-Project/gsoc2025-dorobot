@@ -518,6 +518,7 @@ class NASAuthenticator:
                     print("发送上传过程:", response.json())
                 except Exception as e:
                     print(f"发送上传过程失败: {e}")
+        
         if j != 0:
             try:
                 response = self.session.post(
