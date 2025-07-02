@@ -60,7 +60,7 @@ class NASAuthenticator:
             if data["success"]:
                 self.sid = data["data"]["sid"]
                 self.last_auth_time = datetime.now()
-                return self.sid
+                return True
             else:
                 error_info = data.get('error', {})
                 code = error_info.get('code', '未知错误码')
@@ -72,10 +72,12 @@ class NASAuthenticator:
                     404: "两步验证码验证失败"
                 }
                 message = error_messages.get(code, error_info.get('message', '未知错误'))
-                raise Exception(f"认证失败: {message}（错误码：{code}）")
+                print(f"认证失败: {message}（错误码：{code}）")
+                return False
 
         except requests.exceptions.RequestException as e:
-            raise Exception(f"网络错误: {str(e)}")
+            print(f"网络错误: {str(e)}")
+            return False
     
     def check_session_valid(self):
         """
@@ -99,8 +101,6 @@ class NASAuthenticator:
             resp = requests.get(check_url, params=params, timeout=5)
             resp.raise_for_status()
             data = resp.json()
-            print('sid')
-            print(data)
             return data.get("success", False)
         except:
             return False
