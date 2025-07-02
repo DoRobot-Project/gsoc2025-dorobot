@@ -32,7 +32,7 @@ class NASAuthenticator:
         self.base_url = f"http://{self.nas_ip}:{self.port}/webapi"
         self.server_url="http://localhost:8080"
         self.session = requests.Session()
-        self.get_auth_sid()
+        #self.get_auth_sid()
     
     def get_auth_sid(self):
         """
