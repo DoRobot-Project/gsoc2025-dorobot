@@ -436,8 +436,16 @@ class NASAuthenticator:
         for i in range(file_number):
             if not os.path.exists(local_file_list[i]):
                 j += 1
-                print(j)
                 print(local_file_list[i])
+                try:
+                    task_msg['expand'] = '{"nas_failed_msg":"文件路径不存在"}' 
+                    response = self.session.post(
+                        f"{self.server_url}/api/upload_fail",
+                        json=task_msg
+                    )
+                    print("发送上传失败:", response.json())
+                except Exception as e:
+                    print(f"发送上传失败失败: {e}")
                 continue
 
             file_name = os.path.basename(remote_path_list[i])
@@ -577,6 +585,21 @@ class NASAuthenticator:
                 return resp.json().get("success"), file_size
         except Exception as e:
             print(f"\n上传出错，达到最大重试次数: {str(e)}")
+
+    def test(self):
+        task_msg = {
+            "task_id":223,
+            "task_data_id":2189,
+        }
+        task_msg['expand'] = '{"nas_failed_msg":"文件路径不存在"}' 
+        try:
+            response = self.session.post(
+                f"{self.server_url}/api/upload_fail",
+                json=task_msg
+            )
+            print("发送上传失败:", response.json())
+        except Exception as e:
+            print(f"发送上传失败失败: {e}")
 
     
 
